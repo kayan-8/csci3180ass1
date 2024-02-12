@@ -108,7 +108,7 @@ bool RamenRestaurant::preparePork()
     std:: vector<int> d_array(4,-1);
 
     for( int i = 0; i < ingredientStorageCapacity; i++){
-        if (!(ingredientStorage[i]->isGood())) {
+        if (ingredientStorage[i] == nullptr || !(ingredientStorage[i]->isGood())) {
             continue;
         }
         noodle = (noodle == nullptr) ? dynamic_cast<Noodle *> (ingredientStorage[i]) : noodle;
