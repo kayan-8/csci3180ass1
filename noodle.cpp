@@ -43,11 +43,12 @@ void Noodle::update()
 {
     //TODO: implement this function
     //Hint: you can call the base class implementation of a function by BaseClassName::FunctionName()
-    Noodle::getSoftness()
+    Ingredient::update();
+
     if (softness > 0)
         softness -=5;
-    
-    
+    if (softness < 0)
+        softness = 0;
 
 }
 

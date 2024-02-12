@@ -5,6 +5,7 @@
 #include "soup.h"
 #include "pork.h"
 #include <iostream>
+#include <vector>
 using std::cout;
 using std::endl;
 
@@ -17,8 +18,12 @@ RamenRestaurant::RamenRestaurant(int ingredientStorageCapacity) : ingredientStor
 
 RamenRestaurant::~RamenRestaurant()
 {
-    //TODO: implement this function
     //Hint: use "delete" for non-array dynamic objects, and use "delete []" for dynamic arrays
+    int i = 0;
+    for(; i < ingredientStorageCapacity;i++){
+        delete ingredientStorage[i];
+    }
+    delete ingredientStorage;
 
 
 }
@@ -77,7 +82,7 @@ bool RamenRestaurant::preparePork()
     return true;
 }
 
-bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requiredSoupSpiciness, bool doublePork)
+        bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requiredSoupSpiciness, bool doublePork)
 {
     //TODO: implement this function
     /*
@@ -96,11 +101,52 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         Please copy and use the following for the failure message:
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
     */
-    bool doublePork(){
-        if ( pork == 1){
-            return false;
+    Noodle* noodle = nullptr;
+    Soup* soup = nullptr;
+    Pork* pork = nullptr;
+    Pork* pork2 = nullptr;
+    std:: vector<int> d_array(4,-1);
+
+    for( int i = 0; i < ingredientStorageCapacity; i++){
+        if (!(ingredientStorage[i]->isGood())) {
+            continue;
+        }
+        noodle = (noodle == nullptr) ? dynamic_cast<Noodle *> (ingredientStorage[i]) : noodle;
+        noodle = (noodle != nullptr && noodle->getSoftness() < requiredNoodleSoftness) ? nullptr : noodle;
+
+        soup = (soup == nullptr) ? dynamic_cast<Soup *> (ingredientStorage[i]): soup;
+        soup = (soup != nullptr && soup->getSpiciness()< requiredSoupSpiciness) ? nullptr: soup;
+        pork = (pork == nullptr) ? dynamic_cast<Pork *> (ingredientStorage[i]): pork;
+        pork2 = (pork2 == nullptr && doublePork) ? dynamic_cast<Pork *> (ingredientStorage[i]): pork2;
+        pork2 = (pork2 == pork) ? nullptr: pork2;
+        d_array[0] = (d_array[0] == -1 && noodle != nullptr) ? i : d_array[0];
+        d_array[1] = (d_array[1] == -1 && soup != nullptr) ? i : d_array[1];
+        d_array[2] = (d_array[2] == -1 && pork != nullptr) ? i : d_array[2];
+        d_array[3] = (d_array[3] == -1 && pork2 != nullptr) ? i : d_array[3];
+
     }
-        return true;
+    if(noodle == nullptr || soup == nullptr || pork == nullptr || ((pork2 == nullptr )&& doublePork)) {
+        cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
+        return false;
+    }
+    for(int i = 0; i < 4; i++){
+        ingredientStorage[d_array[i]] = nullptr;
+    }
+    noodle = nullptr;
+    soup = nullptr;
+    pork = nullptr;
+    pork2 = nullptr;
+    delete noodle;
+    delete soup;
+    delete pork;
+    if (doublePork){
+        delete pork2;
+        ingredientStorageUsed--;
+    }
+    ingredientStorageUsed -= 3;
+    ramenServed++;
+    cout << "Ramen has been skillfully prepared and happily served! :)" << endl;
+    return true;
 }
 
 void RamenRestaurant::update()
