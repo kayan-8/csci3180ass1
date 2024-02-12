@@ -132,10 +132,10 @@ bool RamenRestaurant::preparePork()
     for(int i = 0; i < 4; i++){
         ingredientStorage[d_array[i]] = nullptr;
     }
-    noodle = nullptr;
+    /*noodle = nullptr;
     soup = nullptr;
     pork = nullptr;
-    pork2 = nullptr;
+    pork2 = nullptr; */
     delete noodle;
     delete soup;
     delete pork;
